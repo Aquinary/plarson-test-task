@@ -1,0 +1,171 @@
+@import "normalize";
+
+/*
+  Шапка
+ */
+@header-height: 50px;
+@header-bg-color: #212c4c;
+@header-fg-color: white;
+/*
+  Подвал
+ */
+@footer-height: 100px;
+@footer-bg-color: #140f07;
+@footer-fg-color: white;
+/*
+  Список пользователей
+ */
+@users-width: 200px;
+@users-bg-color: lightslategray;
+@users-fg-color: #d0e1e7;
+/*
+  Список сообщений
+ */
+@message-bg-color: #e8f4ff;
+@message-fg-color: black;
+@message-form-height: 100px;
+
+body {
+  display: grid;
+  height: 100%;
+  min-height: 100vh;
+  grid-template-rows: @header-height 1fr @message-form-height; // Так же прижимает футер к низу страницы
+  grid-template-columns: @users-width 1fr; //определяет размеры блока со списком пользователей и блока со списком сообщений
+  grid-template-areas: "chat-header  chat-header "
+                       "chat-users chat-messages"
+                       "chat-form chat-form";
+
+  font-family: "Arial";
+}
+
+.chat-header {
+  grid-area: chat-header ;
+  height: @header-height;
+  background-color: @header-bg-color;
+  color: @header-fg-color;
+}
+
+.chat-messages {
+  position: relative; // вписывает внутренний блок (.scroller) в текущий блок
+  display: grid;
+  grid-area: chat-messages;
+}
+
+.chat-users {
+  position: relative; // вписывает внутренний блок (.scroller) в текущий блок
+  grid-area: chat-users;
+}
+
+.chat-form {
+  display: grid;
+  grid-area: chat-form;
+  grid-template-areas: "textarea button-send";
+  grid-auto-columns: 80% 1fr;
+  background-color: @footer-bg-color;
+  color: @footer-fg-color;
+  border-top: 1px solid gray;
+  textarea {
+    grid-area: textarea;
+    width: 100%;
+    height: 100%;
+    border: 0;
+    box-sizing: border-box;
+    padding: 5px;
+    font-size: 11pt;
+  }
+  .button-send {
+    grid-area: button-send;
+    input[type=button] {
+      width: 100%;
+      height: 100%;
+      border: 0;
+      border-left: 1px solid black;
+      background-color: white;
+    }
+  }
+}
+
+/*
+  Класс-обёртка для других блоков, где требуется прокрутка
+ */
+.scroller
+{
+  position: absolute;
+  grid-area: scroller;
+  overflow: auto;
+  height: 100%;
+  width: 100%;
+}
+
+/*
+  Стили для каждого отдельного участника
+ */
+.user-cell
+{
+  background-color: @users-bg-color;
+  display: flex;
+  align-items: center;
+  margin-top: 10px;
+  margin-left: 10px;
+  margin-right: 10px;
+  .user-avatar {
+    img {
+      padding: 5px;
+      margin-right: 5px;
+      max-height: 32px;
+    }
+  }
+  .user-name {
+    // При слишком большом имени пользователя обрезает его троеточиями
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+
+    color: @users-fg-color;
+  }
+}
+
+
+/*
+  Стили для каждого отдельного сообщения
+ */
+.message-cell {
+  display: grid;
+  grid-template-areas: "message-avatar message-sender message-date"
+                       "message-content message-content message-content";
+
+  grid-template-columns: min-content 1fr;
+  grid-gap: 5px;
+  align-items: center;
+
+  margin-top: 10px;
+  margin-left: 10px;
+  margin-right: 10px;
+  padding: 5px;
+
+  background-color: @message-bg-color;
+  color: @message-fg-color;
+
+  // Аватар
+  .message-avatar {
+    grid-area: message-avatar;
+    img {
+      max-height: 32px;
+    }
+  }
+  // Дата отправки сообщения
+  .message-date {
+    grid-area: message-date;
+  }
+
+  // Имя отправителя
+  .message-sender {
+    grid-area: message-sender;
+  }
+
+  // Содержимое сообщения
+  .message-content {
+    grid-area: message-content;
+    font-size: 11pt;
+  }
+}
